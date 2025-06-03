@@ -1,10 +1,7 @@
-from langchain.llms import HuggingFaceHub
+from langchain.embeddings import HuggingFaceEmbeddings
 
-llm = HuggingFaceHub(repo_id="google/flan-t5-small", model_kwargs={"temperature":0, "max_length":512})
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-def create_qa_chain(retriever):
-    return RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        return_source_documents=True,
-    )
+def get_embeddings(documents):
+    texts = [doc.page_content for doc in documents]
+    return embedding_model.embed_documents(texts)
